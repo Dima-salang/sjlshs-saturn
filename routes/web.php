@@ -15,9 +15,5 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
