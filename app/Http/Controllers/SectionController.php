@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
@@ -46,12 +47,17 @@ class SectionController extends Controller
 
     /**
      * Remove the specified section.
+     *
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy(int $id): Section
+    public function destroy(int $id): JsonResponse
     {
         $section = Section::findOrFail($id);
         $section->delete();
 
-        return $section;
+        return response()->json([
+            'message' => 'Section deleted successfully',
+        ], 200);
     }
 }
