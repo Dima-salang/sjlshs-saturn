@@ -15,7 +15,7 @@ class QRCode extends Model
 {
     use HasFactory;
 
-    protected $table = 'q_r_codes';
+    protected $table = '_q_r_codes';
 
     protected $fillable = [
         'data',

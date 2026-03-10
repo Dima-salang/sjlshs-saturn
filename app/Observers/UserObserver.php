@@ -12,6 +12,15 @@ class UserObserver
     public function created(User $user): void
     {
         if ($user->workos_id) {
+            $isAdmin = $user->email === config('app.admin_email');
+
+            if ($isAdmin) {
+                $user->updateQuietly([
+                    'is_active' => true,
+                    'is_admin' => true,
+                ]);
+            }
+
             $user->teacher()->create([
                 'user_id' => $user->workos_id,
                 'full_name' => $user->name,

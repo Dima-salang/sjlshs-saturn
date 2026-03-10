@@ -18,20 +18,17 @@ class EnsureTeacherIsActive
 
         $user = $request->user();
 
-        // if the user is an admin, permit
+        // Admins always pass through.
         if ($user && $user->is_admin) {
             return $next($request);
         }
 
-        // if the user is not active, deny
-        if ($user && ! $user->is_active) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'Your account is currently inactive. Please contact an administrator.',
-                ], 403);
-            }
-
-            abort(403, 'Your account is currently inactive.');
+        // Inactive users always receive a JSON 403 — the frontend handles the redirect.
+        if ($user && !$user->is_active) {
+            return response()->json([
+                'message' => 'Your account is currently inactive. Please contact an administrator.',
+                'inactive' => true,
+            ], 403);
         }
 
         return $next($request);

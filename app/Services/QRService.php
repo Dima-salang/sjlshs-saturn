@@ -22,7 +22,7 @@ class QRService
         $fullpath = $this->saveQRToStorage($qrCode, $path, $section);
 
         return QRCodeModel::create([
-            'data' => $data,
+            'data' => json_encode($data),
             'path' => $fullpath,
         ]);
     }

@@ -16,13 +16,15 @@ class AttendanceFactory extends Factory
      */
     public function definition(): array
     {
+        $student = \App\Models\Student::factory()->create();
+
         return [
-            'lrn' => $this->faker->numerify('###########'),
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
-            'middle_name' => $this->faker->lastName,
-            'grade_level' => 'Grade 11',
-            'section_id' => \App\Models\Section::factory(),
+            'lrn' => $student->lrn,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
+            'middle_name' => $student->middle_name,
+            'grade_level' => $student->grade_level,
+            'section_id' => $student->section_id,
             'is_absent' => false,
             'is_late' => false,
             'scan_timestamp' => now(),
