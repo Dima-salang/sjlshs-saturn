@@ -23,12 +23,17 @@ class EnsureTeacherIsActive
             return $next($request);
         }
 
-        // Inactive users always receive a JSON 403 — the frontend handles the redirect.
+        // Inactive users: Redirect web browser users to the frontend /inactive page, 
+        // while returning a JSON 403 for API/Ajax requests.
         if ($user && !$user->is_active) {
-            return response()->json([
-                'message' => 'Your account is currently inactive. Please contact an administrator.',
-                'inactive' => true,
-            ], 403);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Your account is currently inactive. Please contact an administrator.',
+                    'inactive' => true,
+                ], 403);
+            }
+
+            return redirect(config('app.frontend_url') . '/inactive');
         }
 
         return $next($request);
