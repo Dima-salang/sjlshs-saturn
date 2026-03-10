@@ -9,6 +9,7 @@ Route::get('/', fn () => Inertia::render('Welcome'))->name('home');
 Route::middleware([
     'auth',
     ValidateSessionWithWorkOS::class,
+    'teacher.active',
 ])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');

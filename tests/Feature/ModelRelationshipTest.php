@@ -3,7 +3,6 @@
 use App\Models\Attendance;
 use App\Models\Section;
 use App\Models\Student;
-use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -11,17 +10,18 @@ uses(RefreshDatabase::class);
 
 it('tests teacher relationships', function () {
     $user = User::factory()->create();
-    $teacher = Teacher::factory()->create(['user_id' => $user->workos_id]);
+    $teacher = $user->teacher;
     $section = Section::factory()->create(['adviser_id' => $teacher->id]);
-    $teacher->update(['section_advisory' => $section->section_name]);
+    $teacher->update(['section_id' => $section->section_id]);
 
     expect($teacher->user->workos_id)->toBe($user->workos_id);
     expect($section->adviser->id)->toBe($teacher->id);
+    expect($teacher->section?->section_id)->toBe($section->section_id);
 });
 
-
 it('tests section relationships', function () {
-    $teacher = Teacher::factory()->create();
+    $user = User::factory()->create();
+    $teacher = $user->teacher;
     $section = Section::factory()->create(['adviser_id' => $teacher->id]);
     Student::factory()->count(3)->create(['section_id' => $section->section_id]);
 
@@ -32,7 +32,8 @@ it('tests section relationships', function () {
 
 it('tests student relationships', function () {
     $section = Section::factory()->create();
-    $teacher = Teacher::factory()->create();
+    $user = User::factory()->create();
+    $teacher = $user->teacher;
     $student = Student::factory()->create([
         'section_id' => $section->section_id,
         'adviser_id' => $teacher->id,

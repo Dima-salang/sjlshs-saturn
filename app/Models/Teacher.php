@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $user_id
  * @property string $full_name
- * @property string $section_advisory
+ * @property int $section_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
@@ -21,7 +21,7 @@ class Teacher extends Model
     protected $fillable = [
         'user_id',
         'full_name',
-        'section_advisory',
+        'section_id',
     ];
 
     /**
@@ -30,5 +30,13 @@ class Teacher extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'workos_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Section, $this>
+     */
+    public function section(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Section::class, 'section_id', 'section_id');
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Attendance;
+namespace App\Http\Requests\Teacher;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAttendanceRequest extends FormRequest
+class UpdateTeacherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,11 @@ class StoreAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lrn' => ['required', 'string', 'exists:students,lrn'],
-            'is_late' => ['nullable', 'boolean'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'section_id' => ['nullable', 'exists:sections,section_id', 'unique:teachers,section_id,'.$this->route('teacher')],
+            'is_active' => ['required', 'boolean'],
+            'is_admin' => ['required', 'boolean'],
+            'is_nonFaculty' => ['required', 'boolean'],
         ];
     }
 }
