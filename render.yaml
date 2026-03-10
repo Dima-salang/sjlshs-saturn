@@ -45,24 +45,24 @@ services:
             value: pgsql
           - key: DB_HOST
             fromDatabase:
-              name: sjlshs-saturn
-              property: host
+                name: sjlshs-saturn
+                property: host
           - key: DB_PORT
             fromDatabase:
-              name: sjlshs-saturn
-              property: port
+                name: sjlshs-saturn
+                property: port
           - key: DB_DATABASE
             fromDatabase:
-              name: sjlshs-saturn
-              property: database
+                name: sjlshs-saturn
+                property: database
           - key: DB_USERNAME
             fromDatabase:
-              name: sjlshs-saturn
-              property: user
+                name: sjlshs-saturn
+                property: user
           - key: DB_PASSWORD
             fromDatabase:
-              name: sjlshs-saturn
-              property: password
+                name: sjlshs-saturn
+                property: password
 
           - key: SESSION_DRIVER
             value: database
@@ -75,6 +75,10 @@ services:
             value: stderr
           - key: LOG_LEVEL
             value: error
+
+          # --- Admin auto-promotion: the WorkOS email that becomes admin on first login ---
+          - key: ADMIN_EMAIL
+            sync: false # set manually in Render dashboard
 
           # WorkOS auth
           - key: WORKOS_CLIENT_ID

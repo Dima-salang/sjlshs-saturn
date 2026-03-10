@@ -2,6 +2,34 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
+
+// ── Public ───────────────────────────────────────────────────────────────────
+
+Route::post('logout', function (AuthKitLogoutRequest $request) {
+    return $request->logout();
+})->middleware(['auth'])->name('api.logout');
+
+Route::get('me', function (Request $request) {
+    $user = $request->user();
+
+    if (!$user) {
+        return response()->json(['authenticated' => false], 401);
+    }
+
+    return response()->json([
+        'authenticated' => true,
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'avatar' => $user->avatar,
+        'is_admin' => $user->is_admin,
+        'is_active' => $user->is_active,
+        'is_nonFaculty' => $user->is_nonFaculty,
+    ]);
+})->middleware(['auth'])->name('api.me');
+
+// ── Authenticated & active ────────────────────────────────────────────────────
 
 Route::middleware(['auth:sanctum', 'teacher.active'])->group(function () {
     Route::get('/user', function (Request $request) {
