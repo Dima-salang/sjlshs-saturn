@@ -56,6 +56,9 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
+    'admin_email' => env('ADMIN_EMAIL'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
