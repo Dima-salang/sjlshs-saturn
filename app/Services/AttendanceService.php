@@ -7,7 +7,7 @@ use App\Models\Student;
 
 class AttendanceService
 {
-    public function addAttendanceRecord(array $decoded): string
+    public function addAttendanceRecord(array $decoded, bool $is_late = false): string
     {
         try {
             // get the student data from the param
@@ -29,9 +29,10 @@ class AttendanceService
                 $attendance->last_name = $student->last_name;
                 $attendance->middle_name = $student->middle_name;
                 $attendance->section_id = $student->section_id;
-                $attendance->gender = $student->gender;
                 $attendance->grade_level = $student->grade_level;
-                $attendance->adviser_id = $student->adviser_id;
+                $attendance->scan_timestamp = now();
+                $attendance->is_absent = false;
+                $attendance->is_late = $is_late;
                 $attendance->save();
 
                 return 'Attendance added successfully';
@@ -43,14 +44,41 @@ class AttendanceService
         }
     }
 
-    public function getAttendanceRecords(array $dateRange, int|string $section): \Illuminate\Support\Collection|string
+    public function getAttendanceRecords(array $dateRange, int|string|null $section = null): \Illuminate\Support\Collection|string
     {
         try {
-            $attendance = Attendance::whereBetween('created_at', $dateRange)->where('section_id', $section)->get();
+            $query = Attendance::whereBetween('created_at', $dateRange);
+            $user = auth()->user();
+
+            if ($user?->is_admin) {
+                if ($section) {
+                    $query->where('section_id', $section);
+                }
+            } elseif ($user?->teacher) {
+                if ($user->teacher->section_id) {
+                    $query->where('section_id', $user->teacher->section_id);
+                } else {
+                    return collect();
+                }
+            } elseif ($section) {
+                $query->where('section_id', $section);
+            }
+
+            return $query->latest()->get();
+        } catch (\Throwable $th) {
+            return 'Error: '.$th->getMessage();
+        }
+    }
+
+    public function updateAttendanceRecord(int $id, array $data): Attendance|string
+    {
+        try {
+            $attendance = Attendance::findOrFail($id);
+            $attendance->update($data);
 
             return $attendance;
-        } catch (\Error $th) {
-            return 'Error: '.$th->getMessage();
+        } catch (\Exception $e) {
+            return 'Error: '.$e->getMessage();
         }
     }
 

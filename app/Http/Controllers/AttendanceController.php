@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Attendance\StoreAttendanceRequest;
+use App\Http\Requests\Attendance\UpdateAttendanceRequest;
 use App\Http\Resources\AttendanceResource;
+use App\Models\Attendance;
 use App\Services\AttendanceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,10 +45,40 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
-        $result = $this->attendanceService->addAttendanceRecord($request->validated());
+        $validated = $request->validated();
+        $isLate = $validated['is_late'] ?? false;
+        $result = $this->attendanceService->addAttendanceRecord($validated, (bool) $isLate);
 
         if ($result === 'Attendance added successfully') {
             return response()->json(['message' => $result], 201);
+        }
+
+        return response()->json(['message' => $result], 400);
+    }
+
+    /**
+     * Display the specified attendance record.
+     */
+    public function show(int $id): AttendanceResource|JsonResponse
+    {
+        try {
+            $attendance = Attendance::findOrFail($id);
+
+            return new AttendanceResource($attendance);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Attendance not found'], 404);
+        }
+    }
+
+    /**
+     * Update the specified attendance record.
+     */
+    public function update(UpdateAttendanceRequest $request, int $id): AttendanceResource|JsonResponse
+    {
+        $result = $this->attendanceService->updateAttendanceRecord($id, $request->validated());
+
+        if ($result instanceof Attendance) {
+            return new AttendanceResource($result);
         }
 
         return response()->json(['message' => $result], 400);

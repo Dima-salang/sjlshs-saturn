@@ -23,7 +23,7 @@ class UpdateTeacherRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:255'],
-            'section_advisory' => ['nullable', 'string', 'max:255'],
+            'section_id' => ['nullable', 'exists:sections,section_id', 'unique:teachers,section_id,'.$this->route('teacher')],
             'is_active' => ['required', 'boolean'],
             'is_admin' => ['required', 'boolean'],
             'is_nonFaculty' => ['required', 'boolean'],

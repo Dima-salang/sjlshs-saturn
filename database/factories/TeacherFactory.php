@@ -19,9 +19,7 @@ class TeacherFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory()->create()->workos_id,
             'full_name' => $this->faker->name,
-            'section_advisory' => $this->faker->word,
+            'section_id' => \App\Models\Section::inRandomOrder()->first()?->section_id,
         ];
     }
-
-
 }

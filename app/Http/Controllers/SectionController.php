@@ -21,6 +21,20 @@ class SectionController extends Controller
     }
 
     /**
+     * Store a newly created section.
+     */
+    public function store(Request $request): Section
+    {
+        $validated = $request->validate([
+            'section_name' => 'required|string|max:255',
+            'grade_level' => 'required|string|max:255',
+            'adviser_id' => 'required|exists:teachers,id',
+        ]);
+
+        return Section::create($validated);
+    }
+
+    /**
      * Display the specified section.
      */
     public function show(int $id): Section
@@ -47,9 +61,6 @@ class SectionController extends Controller
 
     /**
      * Remove the specified section.
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {

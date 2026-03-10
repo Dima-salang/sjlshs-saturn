@@ -38,14 +38,20 @@ class TeacherService
             return 'Teacher not found';
         }
 
-        // Handle user-level flags
-        $userData = array_intersect_key($data, array_flip(['is_active', 'is_admin', 'is_nonFaculty']));
+        // Handle user-level sync
+        $userFields = ['is_active', 'is_admin', 'is_nonFaculty'];
+        $userData = array_intersect_key($data, array_flip($userFields));
+
+        if (isset($data['full_name'])) {
+            $userData['name'] = $data['full_name'];
+        }
+
         if (! empty($userData) && $teacher->user) {
             $teacher->user->update($userData);
         }
 
-        // Filter out user-level flags for teacher model update
-        $teacherData = array_diff_key($data, $userData);
+        // Filter out user-specific flags for teacher model update, but keep full_name
+        $teacherData = array_diff_key($data, array_flip($userFields));
         $teacher->update($teacherData);
 
         return $teacher->fresh('user');

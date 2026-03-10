@@ -23,6 +23,7 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'lrn' => ['required', 'string', 'exists:students,lrn'],
+            'is_late' => ['nullable', 'boolean'],
         ];
     }
 }
