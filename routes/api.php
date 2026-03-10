@@ -8,7 +8,7 @@ use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
 
 Route::post('logout', function (AuthKitLogoutRequest $request) {
     return $request->logout();
-})->middleware(['auth'])->name('api.logout');
+})->middleware(['auth:sanctum'])->name('api.logout');
 
 Route::get('me', function (Request $request) {
     $user = $request->user();
@@ -27,7 +27,7 @@ Route::get('me', function (Request $request) {
         'is_active' => $user->is_active,
         'is_nonFaculty' => $user->is_nonFaculty,
     ]);
-})->middleware(['auth'])->name('api.me');
+})->middleware(['auth:sanctum'])->name('api.me');
 
 // ── Authenticated & active ────────────────────────────────────────────────────
 
