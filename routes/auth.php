@@ -10,9 +10,9 @@ Route::get('login', function (AuthKitLoginRequest $request) {
 })->middleware(['guest'])->name('login');
 
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
-    return tap(redirect()->intended(config('app.frontend_url')), fn () => $request->authenticate());
+    return tap(redirect()->intended(config('app.frontend_url')), fn() => $request->authenticate());
 })->middleware(['guest']);
 
 Route::post('logout', function (AuthKitLogoutRequest $request) {
-    return $request->logout();
+    return $request->logout(config('app.frontend_url'));
 })->middleware(['auth'])->name('logout');

@@ -7,7 +7,15 @@ use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
 // ── Public ───────────────────────────────────────────────────────────────────
 
 Route::post('logout', function (AuthKitLogoutRequest $request) {
-    return $request->logout();
+    $response = $request->logout(config('app.frontend_url'));
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'url' => $response->headers->get('Location') ?: $response->headers->get('X-Inertia-Location'),
+        ]);
+    }
+
+    return $response;
 })->middleware(['auth:sanctum'])->name('api.logout');
 
 Route::get('me', function (Request $request) {
