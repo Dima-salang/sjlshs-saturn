@@ -22,47 +22,47 @@ services:
 
           # --- Set this to your Render service URL after first deploy ---
           - key: APP_URL
-            value: https://sjlshs-saturn-api.onrender.com
+            value: https://sjlshs-saturn.onrender.com
 
           # --- Set this to your Vercel frontend URL ---
           - key: FRONTEND_URL
-            value: https://your-frontend.vercel.app
+            value: https://sjlshs-saturn-next.vercel.app
 
           # --- Sanctum: comma-separated list of allowed SPA domains ---
           - key: SANCTUM_STATEFUL_DOMAINS
-            value: your-frontend.vercel.app
+            value: sjlshs-saturn-next.vercel.app
 
           # --- Database: switch to postgres for persistent data ---
           # Option A — SQLite (simple, data lost on redeploy unless using a disk)
-          - key: DB_CONNECTION
-            value: sqlite
-          - key: DB_DATABASE
-            value: /var/www/html/database/database.sqlite
+          # - key: DB_CONNECTION
+          #   value: sqlite
+          # - key: DB_DATABASE
+          #   value: /var/www/html/database/database.sqlite
 
           # Option B — PostgreSQL (recommended for production)
           # Uncomment the lines below and add a Render Postgres database
-          # - key: DB_CONNECTION
-          #   value: pgsql
-          # - key: DB_HOST
-          #   fromDatabase:
-          #     name: sjlshs-saturn-db
-          #     property: host
-          # - key: DB_PORT
-          #   fromDatabase:
-          #     name: sjlshs-saturn-db
-          #     property: port
-          # - key: DB_DATABASE
-          #   fromDatabase:
-          #     name: sjlshs-saturn-db
-          #     property: database
-          # - key: DB_USERNAME
-          #   fromDatabase:
-          #     name: sjlshs-saturn-db
-          #     property: user
-          # - key: DB_PASSWORD
-          #   fromDatabase:
-          #     name: sjlshs-saturn-db
-          #     property: password
+          - key: DB_CONNECTION
+            value: pgsql
+          - key: DB_HOST
+            fromDatabase:
+              name: sjlshs-saturn
+              property: host
+          - key: DB_PORT
+            fromDatabase:
+              name: sjlshs-saturn
+              property: port
+          - key: DB_DATABASE
+            fromDatabase:
+              name: sjlshs-saturn
+              property: database
+          - key: DB_USERNAME
+            fromDatabase:
+              name: sjlshs-saturn
+              property: user
+          - key: DB_PASSWORD
+            fromDatabase:
+              name: sjlshs-saturn
+              property: password
 
           - key: SESSION_DRIVER
             value: database
@@ -82,7 +82,7 @@ services:
           - key: WORKOS_API_KEY
             sync: false
           - key: WORKOS_REDIRECT_URL
-            value: https://sjlshs-saturn-api.onrender.com/authenticate
+            value: https://sjlshs-saturn.onrender.com/authenticate
 
 # Uncomment to add a managed Postgres database
 # databases:
