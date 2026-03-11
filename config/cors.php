@@ -15,11 +15,15 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'logout'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'logout', 'login', 'authenticate'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => array_filter(array_unique([
+        env('FRONTEND_URL', 'http://localhost:3000'),
+        // Always allow localhost in local/dev environments for easier dev
+        env('APP_ENV') === 'local' ? 'http://localhost:3000' : null,
+    ])),
 
     'allowed_origins_patterns' => [],
 
