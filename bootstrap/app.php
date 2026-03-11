@@ -31,6 +31,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'teacher.active' => \App\Http\Middleware\EnsureTeacherIsActive::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
+
         $middleware->redirectTo(
             guests: '/login',
             users: '/dashboard',
