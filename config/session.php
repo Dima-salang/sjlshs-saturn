@@ -169,7 +169,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
+    'secure' => (env('APP_ENV') === 'production') ? true : env('SESSION_SECURE_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -199,7 +199,7 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', (env('APP_ENV') === 'production' && env('FRONTEND_URL') !== 'http://localhost:3000') ? 'none' : 'lax'),
+    'same_site' => (env('APP_ENV') === 'production') ? 'none' : 'lax',
 
     /*
     |--------------------------------------------------------------------------
