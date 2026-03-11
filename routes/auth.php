@@ -12,10 +12,6 @@ Route::get('login', function (AuthKitLoginRequest $request) {
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     $request->authenticate();
 
-    // Always redirect to the Next.js frontend after authentication.
-    // We intentionally avoid redirect()->intended() because this Laravel app is a pure
-    // API backend — any stale "intended" URL in the session (e.g. /dashboard) would
-    // incorrectly land the user on the Laravel Inertia page instead of the Next.js app.
     return redirect(config('app.frontend_url'));
 })->middleware(['guest']);
 
