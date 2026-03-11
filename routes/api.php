@@ -1,27 +1,42 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
+use Laravel\WorkOS\WorkOS;
+use WorkOS\UserManagement;
 
 // ── Public ───────────────────────────────────────────────────────────────────
 
-Route::post('logout', function (AuthKitLogoutRequest $request) {
-    $response = $request->logout(config('app.frontend_url'));
+Route::post('logout', function (Request $request) {
+    $accessToken = $request->session()->get('workos_access_token');
 
-    if ($request->expectsJson()) {
-        return response()->json([
-            'url' => $response->headers->get('Location') ?: $response->headers->get('X-Inertia-Location'),
-        ]);
+    $workOsSession = $accessToken
+        ? WorkOS::decodeAccessToken($accessToken)
+        : null;
+
+    // Clear the Laravel session
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    if ($workOsSession) {
+        $logoutUrl = (new UserManagement)->getLogoutUrl(
+            $workOsSession['sid'],
+            url(config('app.frontend_url')),
+        );
+
+        return response()->json(['url' => $logoutUrl]);
     }
 
-    return $response;
+    // No WorkOS session found — just tell the frontend to go to login
+    return response()->json(['url' => null]);
 })->middleware(['auth:sanctum'])->name('api.logout');
 
 Route::get('me', function (Request $request) {
     $user = $request->user();
 
-    if (!$user) {
+    if (! $user) {
         return response()->json(['authenticated' => false], 401);
     }
 
