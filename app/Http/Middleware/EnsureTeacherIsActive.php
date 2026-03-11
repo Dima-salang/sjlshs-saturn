@@ -23,9 +23,9 @@ class EnsureTeacherIsActive
             return $next($request);
         }
 
-        // Inactive users: Redirect web browser users to the frontend /inactive page, 
+        // Inactive users: Redirect web browser users to the frontend /inactive page,
         // while returning a JSON 403 for API/Ajax requests.
-        if ($user && !$user->is_active) {
+        if ($user && ! $user->is_active) {
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'Your account is currently inactive. Please contact an administrator.',
@@ -33,7 +33,7 @@ class EnsureTeacherIsActive
                 ], 403);
             }
 
-            return redirect(config('app.frontend_url') . '/inactive');
+            return redirect(config('app.frontend_url').'/inactive');
         }
 
         return $next($request);

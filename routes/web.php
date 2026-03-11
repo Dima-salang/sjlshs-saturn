@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 
-Route::get('/', fn () => Inertia::render('Welcome'))->name('home');
+Route::get('/', function () {
+    return redirect(config('app.frontend_url'));
+})->name('home');
 
 Route::middleware([
     'auth',
@@ -12,7 +13,7 @@ Route::middleware([
     'teacher.active',
 ])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
+        return redirect(config('app.frontend_url'));
     })->name('dashboard');
 });
 

@@ -28,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'teacher.active' => \App\Http\Middleware\EnsureTeacherIsActive::class,
         ]);
+
+        $middleware->redirectTo(
+            users: config('app.frontend_url')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
